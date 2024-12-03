@@ -6,7 +6,7 @@ import time
 # List of brands for mobile phone memory cards
 brands = [
     'Adata', 'ADATA', 'Angelbird', 'Apacer', 'Bavvo', 'Blex', 'Corsair', 'Crucial', 'Evo', 
-    'Hikvision', 'Kingston', 'Lexar', 'Micro', 'Mushkin', 'Patriot', 'SanDisk', 'Samsung', 
+    'Hikvision', 'Kingston', 'Lexar', 'Sandisk', 'Mushkin', 'Patriot', 'sanDisk', 'Samsung', 
     'Toshiba', 'Transcend', 'Verbatim', 'Vitec', 'Western Digital', 'Yesido'
 ]
 
