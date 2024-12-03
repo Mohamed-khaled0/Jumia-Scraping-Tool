@@ -14,23 +14,22 @@ brands = [
 # Base URL for power banks with a page placeholder
 base_url = 'https://www.jumia.com.eg/mlp-portable-power-banks/?page={}'
 
-# Function to get product data from each product div
+# Function to extract product data
 def get_product_data(product):
+    # Extract product name
     name = product.find('h3', {'class': 'name'}).get_text(strip=True)
-    
-    # Filter for products that contain "power bank" in the name
+
+    # Extract price
     price = product.find('div', {'class': 'prc'}).get_text(strip=True)
-    old_price = product.find('div', {'class': 'old'})
-    if old_price:
-        old_price = old_price.get_text(strip=True)
-    else:
-        old_price = None
-    discount = product.find('div', {'class': 'bdg _dsct _sm'})
-    if discount:
-        discount_percentage = discount.get_text(strip=True)
-    else:
-        discount_percentage = None
-    
+
+    # Extract product link (adjusted to get correct href)
+    link_tag = product.find('a', {'class': 'core'})
+    link = 'https://www.jumia.com.eg' + link_tag['href'] if link_tag else None
+
+    # Extract product image URL (adjusted to get data-src)
+    img_tag = product.find('img', {'class': 'img'})
+    img_url = img_tag['data-src'] if img_tag and 'data-src' in img_tag.attrs else None
+
     # Determine the category (brand) based on product name
     category = None
     for brand in brands:
@@ -43,8 +42,8 @@ def get_product_data(product):
     return {
         'Product Name': name,
         'Price': price,
-        'Old Price': old_price,
-        'Discount Percentage': discount_percentage,
+        'Product Link': link,
+        'Image URL': img_url,
         'Category': category  # Added the category (brand)
     }
 
@@ -56,10 +55,10 @@ def scrape_page(page_num):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
         # Find all product entries on the page
-        products = soup.find_all('div', {'class': 'info'})
+        products = soup.find_all('article', {'class': 'prd _fb col c-prd'})  # Adjusted to find 'article' tags
         
         if not products:
-            return None  # If no products are found, return None
+            return None
 
         page_data = []
         for product in products:
@@ -70,10 +69,10 @@ def scrape_page(page_num):
         print(f"Failed to retrieve page {page_num}.")
         return None
 
-# Function to scrape all pages until the last page
+# Function to scrape all pages
 def scrape_all_pages():
     all_product_data = []
-    page_num = 1  # Start from page 1
+    page_num = 1
 
     while True:
         print(f"Scraping page {page_num}...")
@@ -83,9 +82,8 @@ def scrape_all_pages():
             print(f"No products found on page {page_num}. Stopping scraping.")
             break
         
-        all_product_data.extend(page_data)  # Add the products from the current page
-        
-        page_num += 1  # Go to the next page
+        all_product_data.extend(page_data)
+        page_num += 1
         time.sleep(2)  # Add a delay to avoid overloading the server
     
     return all_product_data
@@ -93,16 +91,16 @@ def scrape_all_pages():
 # Function to save data to an Excel file
 def save_to_excel(data):
     df = pd.DataFrame(data)
-    # Specify a path to save the Excel file
-    file_path = 'C:/Users/dell/Desktop/power_banks_jumia_products.xlsx'  # Adjust the path as necessary
+    file_path = 'C:/Users/dell/Desktop/power_banks_jumia_products.xlsx'  # Adjust the path
     df.to_excel(file_path, index=False, engine='openpyxl')
     print(f"Data saved to {file_path}")
 
-# Main function to start the scraping process
+# Main function to start scraping
 def main():
-    all_product_data = scrape_all_pages()  # Scrape all pages
+    all_product_data = scrape_all_pages()
     if all_product_data:
-        save_to_excel(all_product_data)  # Save data to an Excel file
+        save_to_excel(all_product_data)
+
 
 if __name__ == '__main__':
     main()
