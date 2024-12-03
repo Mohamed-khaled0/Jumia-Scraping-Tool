@@ -14,21 +14,20 @@ base_url = 'https://www.jumia.com.eg/desktop-computers/?page={}'
 
 # Function to get product data from each product div
 def get_product_data(product):
+    # Extract product name
     name = product.find('h3', {'class': 'name'}).get_text(strip=True)
-    
-    # Extracting product details like price, old price, and discount
+
+    # Extract price
     price = product.find('div', {'class': 'prc'}).get_text(strip=True)
-    old_price = product.find('div', {'class': 'old'})
-    if old_price:
-        old_price = old_price.get_text(strip=True)
-    else:
-        old_price = None
-    discount = product.find('div', {'class': 'bdg _dsct _sm'})
-    if discount:
-        discount_percentage = discount.get_text(strip=True)
-    else:
-        discount_percentage = None
-    
+
+    # Extract product link (adjusted to get correct href)
+    link_tag = product.find('a', {'class': 'core'})
+    link = 'https://www.jumia.com.eg' + link_tag['href'] if link_tag else None
+
+    # Extract product image URL (adjusted to get data-src)
+    img_tag = product.find('img', {'class': 'img'})
+    img_url = img_tag['data-src'] if img_tag and 'data-src' in img_tag.attrs else None
+
     # Determine the category (brand) based on product name
     category = None
     for brand in brands:
@@ -41,9 +40,9 @@ def get_product_data(product):
     return {
         'Product Name': name,
         'Price': price,
-        'Old Price': old_price,
-        'Discount Percentage': discount_percentage,
-        'Category': category  # Added the category (brand)
+        'Product Link': link,
+        'Image URL': img_url,
+        'Category': category
     }
 
 # Function to scrape products from a given page
@@ -54,7 +53,7 @@ def scrape_page(page_num):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
         # Find all product entries on the page
-        products = soup.find_all('div', {'class': 'info'})
+        products = soup.find_all('article', class_='prd _fb col c-prd')
         
         if not products:
             return None  # If no products are found, return None

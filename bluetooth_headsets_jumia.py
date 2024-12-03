@@ -18,22 +18,19 @@ brands = [
 # Base URL for Bluetooth headsets with a page placeholder
 base_url = 'https://www.jumia.com.eg/mobile-phone-bluetooth-headsets/?page={}'
 
+
 # Function to get product data from each product div
 def get_product_data(product):
     name = product.find('h3', {'class': 'name'}).get_text(strip=True)
     
-    # Extracting product details like price, old price, and discount
+    # Extracting product details like price
     price = product.find('div', {'class': 'prc'}).get_text(strip=True)
-    old_price = product.find('div', {'class': 'old'})
-    if old_price:
-        old_price = old_price.get_text(strip=True)
-    else:
-        old_price = None
-    discount = product.find('div', {'class': 'bdg _dsct _sm'})
-    if discount:
-        discount_percentage = discount.get_text(strip=True)
-    else:
-        discount_percentage = None
+    
+    # Getting the image and link for each product
+    img_tag = product.find('img')
+    img_url = img_tag['src'] if img_tag else None
+    link_tag = product.find('a', {'class': 'core'})
+    link = link_tag['href'] if link_tag else None
     
     # Determine the category (brand) based on product name
     category = None
@@ -47,8 +44,8 @@ def get_product_data(product):
     return {
         'Product Name': name,
         'Price': price,
-        'Old Price': old_price,
-        'Discount Percentage': discount_percentage,
+        'Image URL': img_url,
+        'Product Link': link,
         'Category': category  # Added the category (brand)
     }
 

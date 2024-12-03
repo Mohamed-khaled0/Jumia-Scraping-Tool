@@ -24,18 +24,14 @@ base_url = 'https://www.jumia.com.eg/mobile-phone-accessories-cables/?page={}'
 def get_product_data(product):
     name = product.find('h3', {'class': 'name'}).get_text(strip=True)
     
-    # Extracting product details like price, old price, and discount
+    # Extracting product price
     price = product.find('div', {'class': 'prc'}).get_text(strip=True)
-    old_price = product.find('div', {'class': 'old'})
-    if old_price:
-        old_price = old_price.get_text(strip=True)
-    else:
-        old_price = None
-    discount = product.find('div', {'class': 'bdg _dsct _sm'})
-    if discount:
-        discount_percentage = discount.get_text(strip=True)
-    else:
-        discount_percentage = None
+    
+    # Extract image link
+    image_url = product.find('img')['data-src']
+    
+    # Extract product link
+    product_link = product.find('a', {'class': 'core'})['href']
     
     # Determine the category (brand) based on product name
     category = None
@@ -49,9 +45,9 @@ def get_product_data(product):
     return {
         'Product Name': name,
         'Price': price,
-        'Old Price': old_price,
-        'Discount Percentage': discount_percentage,
-        'Category': category  # Added the category (brand)
+        'Category': category,
+        'Image URL': image_url,  # Added image URL
+        'Product Link': f"https://www.jumia.com.eg{product_link}"  # Added product link
     }
 
 # Function to scrape products from a given page
