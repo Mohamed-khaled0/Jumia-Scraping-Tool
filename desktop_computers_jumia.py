@@ -53,8 +53,8 @@ def scrape_page(page_num):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
         # Find all product entries on the page
-        products = soup.find_all('article', class_='prd _fb col c-prd')
-        
+        products = soup.find_all('article', class_='prd _fb col c-prd')  # Corrected class name
+
         if not products:
             return None  # If no products are found, return None
 
