@@ -8,8 +8,9 @@ This repository contains a Python script designed to scrape product data from sp
 - Extracts product details:
   - **Product Name**
   - **Price**
-  - **Old Price** (if available)
-  - **Discount Percentage** (if available)
+  - **Product Link**
+  - **Product Category**
+  - **Product Image**
 - Saves data into an Excel file.
 
 ## Prerequisites
