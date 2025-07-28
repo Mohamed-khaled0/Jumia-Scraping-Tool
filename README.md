@@ -1,42 +1,58 @@
-# Jumia Scraping Tool
+# Jumia Scraping Tool 
 
 ## Overview
-This repository contains a Python script designed to scrape product data from specific categories on the Jumia Egypt website. The script extracts product information such as name, price, old price, and discount percentage and saves the data into an Excel file.
+Easy-to-use Python script to scrape product data from any category on Jumia Egypt.  
+Choose one or more categories from the menu, and the script outputs an Excel file per category with all product details.
 
 ## Features
-- Scrapes all pages of a specific product category.
-- Extracts product details:
-  - **Product Name**
-  - **Price**
-  - **Product Link**
-  - **Product Category**
-  - **Product Image**
-- Saves data into an Excel file.
+- **All Categories in One Place**  
+  Every original category script is now a menu option—no duplication.  
+- **Multi‑Select Menu**  
+  Enter `1,3,5` to scrape multiple categories in one run.  
+- **Generic Scraper Logic**  
+  Shared code for requests, parsing, rate‑limiting, and exporting.  
+- **Easy to Extend**  
+  Add a new category by copying a function, updating `brands`, `base_url`, and `filename`, then decorating with `@register_scraper('Your Category')`.
 
 ## Prerequisites
-- Python 3.x installed on your system.
-- Required Python libraries:
+- Python 3.x  
+- Python libraries:
   - `requests`
   - `beautifulsoup4`
   - `pandas`
   - `openpyxl`
 
-Install the required libraries using:
-```bash
-pip install requests beautifulsoup4 pandas openpyxl
-```
+## Installation
 
-## Usage
-1. Clone the repository or copy the script.
-2. Open the script file and set the base URL to the desired Jumia category.
-   ```python
-   base_url = 'https://www.jumia.com.eg/computing-audio-video-accessories/?page={}' OR  Add your url here  
-   ```
-3. Run the script:
+1. **Clone the repo**  
    ```bash
-   python script_name.py
-   ```
-4. The scraped data will be saved as an Excel file in the specified location:
-   ```
-   C:/Users/dell/Desktop/audio_video_accessories_jumia.xlsx
-   ```
+   git clone https://github.com/yourusername/jumia-scraping-tool.git
+   cd jumia-scraping-tool
+
+2. **(Recommended) Create and activate a virtual environment**  
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+
+3. **Install dependencies**  
+   ```bash
+   pip install requests beautifulsoup4 pandas openpyxl
+
+4. **Usage**  
+   ```bash
+   python jumia_scraper_all.py
+
+Example
+
+Select categories to scrape (e.g. 1,3,5):
+1. Accessories and Cables
+2. Android Phones
+3. Audio and Video Accessories
+...
+Enter numbers: 2,4
+
+--- Scraping: Android Phones ---
+Data saved to android_phones_jumia_products.xlsx
+
+--- Scraping: Bluetooth Headsets ---
+Data saved to bluetooth_headsets_jumia_products.xlsx
